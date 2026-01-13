@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NexGen Facility M3 - Request Updated</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <style>
+        :root {
+            --m3-bg: #1C1B1F;
+            --m3-surface: #2B2930;
+            --m3-surface-container: #36343B;
+            --m3-primary: #D0BCFF;
+            --m3-on-primary: #381E72;
+            --m3-primary-container: #4F378B;
+            --m3-on-primary-container: #EADDFF;
+            --m3-on-surface: #E6E1E5;
+            --m3-on-surface-variant: #CAC4D0;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--m3-bg); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; height: 100vh; overflow: hidden; color: var(--m3-on-surface); }
+
+        header {
+            padding: calc(env(safe-area-inset-top) + 20px) 16px 12px;
+            background: rgba(28, 27, 31, 0.85);
+            backdrop-filter: blur(12px);
+            position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.hidden-header { transform: translateY(-100%); }
+
+        .page { 
+            display: none; height: 100vh; overflow-y: auto; 
+            padding: calc(90px + env(safe-area-inset-top)) 12px calc(140px + env(safe-area-inset-bottom));
+        }
+        .page.active { display: block; }
+
+        #p2.active { 
+            padding-top: calc(10px + env(safe-area-inset-top)); 
+            padding-left: 0; padding-right: 0; 
+        }
+
+        #p2-container {
+            height: 82vh; margin: 0 4px; border-radius: 24px; overflow: hidden;
+            border: 1px solid var(--m3-surface-container); background: #FFFFFF;
+        }
+
+        .card { 
+            background: var(--m3-surface); padding: 18px 24px; margin-bottom: 10px; border-radius: 24px; 
+            display: flex; align-items: center; width: 100%; min-height: 88px; 
+            border: 1px solid rgba(255,255,255,0.05); text-align: left;
+        }
+        .card:active { background: var(--m3-secondary-container); transform: scale(0.97); }
+        
+        .c-icon { 
+            width: 48px; height: 48px; border-radius: 16px; 
+            background: var(--m3-primary-container); color: var(--m3-primary); 
+            display: flex; align-items: center; justify-content: center; margin-right: 18px; flex-shrink: 0;
+        }
+        .c-info h3 { font-weight: 700; color: var(--m3-on-surface); font-size: 16px; margin: 0; }
+        .c-info p { font-size: 12px; color: var(--m3-on-surface-variant); margin-top: 4px; }
+
+        .fab {
+            position: fixed; bottom: calc(115px + env(safe-area-inset-bottom)); right: 24px;
+            background-color: var(--m3-primary-container); color: var(--m3-on-primary-container);
+            padding: 16px 24px; border-radius: 18px; display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); z-index: 60; font-weight: 700;
+        }
+
+        nav {
+            position: fixed; bottom: calc(24px + env(safe-area-inset-bottom)); 
+            left: 12px; right: 12px; height: 80px; 
+            background: var(--m3-surface-container); 
+            display: flex; justify-content: space-around; align-items: center; 
+            z-index: 50; border-radius: 28px; 
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+        .n-btn { display: flex; flex-direction: column; align-items: center; width: 20%; cursor: pointer; }
+        .icon-box { width: 64px; height: 32px; border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+        .n-btn.active .icon-box { background-color: var(--m3-primary-container); color: var(--m3-primary); }
+        .n-txt { font-size: 11px; font-weight: 600; margin-top: 6px; color: var(--m3-on-surface-variant); }
+
+        #scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; backdrop-filter: blur(6px); }
+        #sheet { 
+            position: fixed; bottom: -100%; left: 0; right: 0; 
+            background: var(--m3-surface); border-radius: 32px 32px 0 0; z-index: 1001; height: 88vh; 
+            display: flex; flex-direction: column; transition: bottom 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        .sheet-header { padding: 12px 20px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
+        .sheet-body { flex: 1; overflow-y: auto; background: var(--m3-bg); padding: 12px 0 60px; }
+        iframe { width: 100%; height: 100%; border: none; background: white; }
+    </style>
+</head>
+<body>
+
+    <header id="main-header"><h1 id="h-title" class="font-extrabold text-2xl tracking-tight text-[#E6E1E5]">Daily Activity</h1></header>
+
+    <div id="fab-periodik" class="fab hidden" onclick="window.open('https://drive.google.com/drive/folders/1Y-sgaereUh9w-HSFwXsGm4GYHN9dLn9Y', '_blank')">
+        <span class="material-symbols-rounded">folder_open</span>
+        <span>Selengkapnya</span>
+    </div>
+
+    <div id="scrim" onclick="closeSheet()"></div>
+    <div id="sheet">
+        <div class="w-12 h-1.5 bg-[#49454F] rounded-full mx-auto my-4 flex-shrink-0" onclick="closeSheet()"></div>
+        <div class="sheet-header">
+            <h2 id="s-title" class="font-bold text-lg truncate flex-1 text-[#E6E1E5]">Preview</h2>
+            <button id="btn-external" class="p-2.5 bg-[#4F378B] text-[#D0BCFF] rounded-2xl flex items-center justify-center">
+                <span class="material-symbols-rounded">open_in_new</span>
+            </button>
+            <button onclick="closeSheet()" class="p-2.5 bg-[#36343B] text-[#CAC4D0] rounded-2xl flex items-center justify-center">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div id="sheet-content" class="sheet-body"></div>
+    </div>
+
+    <main>
+        <section id="p1" class="page active"></section>
+        <section id="p2" class="page">
+            <div id="p2-container"><iframe src="https://poharaayub.github.io/OCS-NFI-Apps-26-Job-Desk/"></iframe></div>
+        </section>
+        <section id="p3" class="page"></section>
+        <section id="p4" class="page"></section>
+        <section id="p5" class="page"></section>
+    </main>
+
+    <nav>
+        <div class="n-btn active" onclick="go('p1', 'Daily Activity', this)">
+            <div class="icon-box"><span class="material-symbols-rounded">dashboard</span></div>
+            <span class="n-txt">Daily</span>
+        </div>
+        <div class="n-btn" onclick="go('p2', 'Periodik', this)">
+            <div class="icon-box"><span class="material-symbols-rounded">event_repeat</span></div>
+            <span class="n-txt">Periodik</span>
+        </div>
+        <div class="n-btn" onclick="go('p3', 'Request', this)">
+            <div class="icon-box"><span class="material-symbols-rounded">add_circle</span></div>
+            <span class="n-txt">Request</span>
+        </div>
+        <div class="n-btn" onclick="go('p4', 'Laporan', this)">
+            <div class="icon-box"><span class="material-symbols-rounded">assignment</span></div>
+            <span class="n-txt">Laporan</span>
+        </div>
+        <div class="n-btn" onclick="go('p5', 'Member', this)">
+            <div class="icon-box"><span class="material-symbols-rounded">group</span></div>
+            <span class="n-txt">Member</span>
+        </div>
+    </nav>
+
+    <script>
+        const members = [
+            { n: "Junaidi", d: "OCS Area Manager", p: "6285886607991" },
+            { n: "Pohara Ayub", d: "Team Leader", p: "6289637126728" },
+            { n: "Sadulloh", d: "Team Leader", p: "6285281587927" },
+            { n: "Sulaiman", d: "CSO Head Office Jakarta", p: "6285716230391" },
+            { n: "Saiful Bahri", d: "CSO Office Lantai 1", p: "6281389327308" },
+            { n: "Siti Maemunah", d: "CSO Office Lantai 2", p: "6285771090915" },
+            { n: "Wahidin", d: "Gardener", p: "6283819602330" },
+            { n: "Edi Ahmad Jubaedi", d: "CSO Produksi", p: "6285883524329" },
+            { n: "Ade Surahman", d: "CSO Produksi", p: "6281947172711" },
+            { n: "Muhammad Toni", d: "CSO Produksi", p: "6281286448626" },
+            { n: "M. Rifai", d: "CSO Produksi", p: "6285810611074" },
+            { n: "Amrullah", d: "CSO Warehouse 2 & 1", p: "6283879624040" },
+            { n: "Nabrih", d: "Pembersihan Pallet WH Tepung", p: "6281295412005" }
+        ];
+
+        // KONFIGURASI PESAN OTOMATIS
+        const MSG_DEFAULT = "Halo, tolong cleaning area/ bagian ini";
+
+        function go(id, t, el) {
+            document.querySelectorAll('.page, .n-btn').forEach(x => x.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+            
+            const header = document.getElementById('main-header');
+            const fab = document.getElementById('fab-periodik');
+
+            if(id === 'p2') {
+                header.classList.add('hidden-header');
+                fab.classList.remove('hidden');
+            } else {
+                header.classList.remove('hidden-header');
+                document.getElementById('h-title').innerText = t;
+                fab.classList.add('hidden');
+            }
+            closeSheet();
+        }
+
+        function createCard(l, i, a, d = "") {
+            return `<div class="px-2 w-full"><button class="card" onclick="${a}">
+                <div class="c-icon"><span class="material-symbols-rounded">${i}</span></div>
+                <div class="c-info"><h3>${l}</h3>${d ? `<p>${d}</p>` : ''}</div>
+                <span class="material-symbols-rounded text-[#938F99]">chevron_right</span>
+            </button></div>`;
+        }
+
+        function openInSheet(title, url) {
+            const content = document.getElementById('sheet-content');
+            const btnExt = document.getElementById('btn-external');
+            document.getElementById('s-title').innerText = title;
+            btnExt.style.display = 'flex';
+            btnExt.onclick = () => window.open(url, '_blank');
+            content.innerHTML = `<iframe src="${url.includes('spreadsheets') ? url.split('/edit')[0] + '/preview' : url}"></iframe>`;
+            document.getElementById('scrim').style.display = 'block';
+            document.getElementById('sheet').style.bottom = '0';
+        }
+
+        function openMenuSheet(type) {
+            const content = document.getElementById('sheet-content');
+            const btnExt = document.getElementById('btn-external');
+            btnExt.style.display = 'none';
+            content.innerHTML = '<div class="flex flex-col gap-1 items-center pt-4"></div>';
+            const inner = content.querySelector('div');
+
+            if(type === 'prod') {
+                document.getElementById('s-title').innerText = "Shift Produksi";
+                inner.innerHTML += createCard("Shift Pagi", "light_mode", "openInSheet('Shift Pagi', 'https://docs.google.com/spreadsheets/d/17Q2XE0EJeK_lssBFGwsQEhLZ4AodoxeTN6w3G6kIfUA/edit')");
+                inner.innerHTML += createCard("Shift Malam", "dark_mode", "openInSheet('Shift Malam', 'https://docs.google.com/spreadsheets/d/1SDMqGcMUVXzS1xT_TwrnknUEbJTa5sopvqRkI6EIowA/edit')");
+            } else {
+                document.getElementById('s-title').innerText = type === 'req_tl' ? "Pilih Team Leader" : "Pilih Personel";
+                const list = type === 'req_tl' ? members.filter(m => m.d.includes("Team Leader") || m.d.includes("Manager")) : members.filter(m => m.d.includes("CSO") || m.d.includes("Gardener") || m.d.includes("Pembersihan"));
+                
+                // Pesan di Request menggunakan MSG_DEFAULT
+                list.forEach(m => inner.innerHTML += createCard(m.n, "account_circle", `chat('${m.p}', '${MSG_DEFAULT}')`, m.d));
+            }
+            document.getElementById('scrim').style.display = 'block';
+            document.getElementById('sheet').style.bottom = '0';
+        }
+
+        function closeSheet() { document.getElementById('sheet').style.bottom = '-100%'; document.getElementById('scrim').style.display = 'none'; }
+        function chat(p, msg) { window.open(`https://wa.me/${p}?text=${encodeURIComponent(msg)}`); closeSheet(); }
+
+        const renderItems = (id, items) => {
+            const container = document.getElementById(id);
+            items.forEach(i => {
+                let action = "";
+                if (i.ext) {
+                    action = `window.open('${i.url}', '_blank')`;
+                } else {
+                    action = i.url ? `openInSheet('${i.l}', '${i.url}')` : (i.s ? `openMenuSheet('${i.s}')` : "");
+                }
+                container.innerHTML += createCard(i.l, i.i, action);
+            });
+        };
+
+        renderItems('p1', [
+            {l:"HO Jakarta", i:"apartment", url:"https://docs.google.com/spreadsheets/d/1xleDib2bas3Z17D4rsxXufCL7U-x_fLXRPRHuys4jQ0/edit"},
+            {l:"Office Lantai 2", i:"layers", url:"https://docs.google.com/spreadsheets/d/1tyMsJDVou1WAPlNJ91pwmJRSwbEp11WTkxKHh06t_ok/edit"},
+            {l:"Office Lantai 1", i:"floor", url:"https://docs.google.com/spreadsheets/d/14PpB7OEDIW_si7OgyKO2LAjJGHeXXAzC8JDvjoD3yC8/edit"},
+            {l:"Gardener Area", i:"park", url:"https://docs.google.com/spreadsheets/d/1Fb4O-uwNcqmfDU9XfxGdGXgcGGUgYXGTl0fctk8WFLs/edit"},
+            {l:"Produksi Area", i:"factory", s:"prod"},
+            {l:"Warehouse 2 & 1", i:"inventory_2", url:"https://docs.google.com/spreadsheets/d/1xhyGL_HEfzX2YP8ehgrstr2DfjAcuMR9txdH7rcohbI/edit"},
+            {l:"Warehouse 1", i:"warehouse", url:"https://docs.google.com/spreadsheets/d/1WeXStuNQlU53G7NtmMIIZcUdyQnQD7OTsJRgf6kCrPo/edit"}
+        ]);
+        
+        renderItems('p3', [
+            {l:"Request ke Team Leader", i:"hail", s:"req_tl"}, 
+            {l:"Request ke Cleaner", i:"cleaning_services", s:"req_cso"}
+        ]);
+        
+        renderItems('p4', [
+            {l:"Schedule Anggota", i:"calendar_today", url:"https://docs.google.com/spreadsheets/d/1TUSJ4jp6Ag7bFnUk54YpES1SKo8m_FBekuG-fShZaE8/edit"},
+            {l:"Laporan Pencucian Box", i:"inventory", url:"https://docs.google.com/spreadsheets/d/1vf2pzwlvdsm17cyo1Zrc6DBUL4EeQOng5uJjU12aYvg/edit"},
+            {l:"Laporan Pencucian Pallet", i:"view_agenda", url:"https://docs.google.com/spreadsheets/d/13dPCq4lEhV4PRA4z2RLQEmPbOIBK9emuclkxk-Dh7iU/edit"},
+            {l:"Laporan Pembersihan Pallet Warehouse Tepung", i:"layers_clear", url:"https://docs.google.com/spreadsheets/d/1C9Zrywvi_ggnHnKHB9fxUU9f-DCWaGNFJflKqbHVEnI/edit?usp=drivesdk"},
+            {l:"Feedback & Complaint", i:"forum", ext: true, url:"https://wa.me/6289637126728"},
+            {l:"Program Big Cleaning", i:"folder_shared", ext: true, url:"https://drive.google.com/drive/folders/1c1mQZI8IuOqy1HnGMozhmQqVbvW--vpz"}
+        ]);
+
+        // Halaman Member tetap menggunakan sapaan personal
+        members.forEach(m => { 
+            document.getElementById('p5').innerHTML += createCard(m.n, "account_circle", `chat('${m.p}', 'Halo ${m.n}')`, m.d); 
+        });
+    </script>
+</body>
+</html>
